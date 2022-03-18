@@ -69,10 +69,11 @@ class ILMPrioQueue:
                 )
             )
             return False
-        if new_entry["priority"] > 10:
+        if new_entry["priority"] > 10 and new_entry["priority"] < 0:
             self._logger.info(
                 (
-                    f"Priority must be lower than 10 for command"
+                    f"Priority must be lower than 10 and greater than or equal"
+                    f" to 0 for command"
                     f" {new_entry.get('command')}"
                 )
             )
