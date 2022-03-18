@@ -1,5 +1,5 @@
 """
-
+My testing space for using the queue in practice.
 """
 
 import sys
@@ -18,19 +18,16 @@ my_queue.insert({"priority": 2, "command": "run_eigth_cmd"})
 my_queue.insert({"priority": 10, "command": "run_first_cmd"})
 my_queue.insert({"priority": 11, "command": "run_first_cmd"})
 
-
 my_queue.remove("run_first_cmd")
 my_queue.remove("run_sixth_cmd")
 
 my_queue.insert({"priority": 9, "command": ""})
 
-
 my_queue.insert({"priority": 5, "command": "run_fifth_cmd"})
 my_queue.remove("run_fifth_cmd")
-
-
 
 for i in my_queue.arr:
     print(i)
 print("*"*5)
 print(my_queue.arr[0])
+print(my_queue.pop())

@@ -5,7 +5,7 @@ from heap_priority_queue import ILMPrioQueue, QueueItem
 
 
 def test_validate_entry():
-    my_queue = ILMPrioQueue()
+    my_queue = ILMPrioQueue(log_level="error")
     bad_keys = my_queue._validate_entry(
         {"priority": 3, "nothing": "my_cmd"}
     )
@@ -24,10 +24,10 @@ def test_validate_entry():
 
 
 def test_insert():
-    my_queue = ILMPrioQueue()
+    my_queue = ILMPrioQueue(log_level="error")
     my_queue.insert({"priority": 10, "command": "only_cmd"})
     try:
-        assert len(my_queue.arr) == 1
+        assert len(my_queue._arr) == 1
     except AssertionError:
         print("[FAIL] test_insert has failed.")
         return
@@ -35,7 +35,7 @@ def test_insert():
 
 
 def test_compare_child_node():
-    my_queue = ILMPrioQueue()
+    my_queue = ILMPrioQueue(log_level="error")
     one = QueueItem(
         prio=1,
         command="one_cmd",
@@ -46,7 +46,7 @@ def test_compare_child_node():
         command="two_cmd",
         orig_order=0
     )
-    my_queue.arr = [one, two]
+    my_queue._arr = [one, two]
     try:
         assert my_queue._compare_child_node(0, 1) == 1
     except AssertionError:
@@ -56,7 +56,7 @@ def test_compare_child_node():
 
 
 def test_heapify():
-    my_queue = ILMPrioQueue()
+    my_queue = ILMPrioQueue(log_level="error")
     one = QueueItem(
         prio=1,
         command="one_cmd",
@@ -72,33 +72,19 @@ def test_heapify():
         command="ten_cmd",
         orig_order=0
     )
-    my_queue.arr = [one, two, three]
-    for index in range((len(my_queue.arr) // 2) - 1, -1, -1):
-        my_queue._heapify(len(my_queue.arr) + 1, index)
+    my_queue._arr = [one, two, three]
+    for index in range((len(my_queue._arr) // 2) - 1, -1, -1):
+        my_queue._heapify(len(my_queue._arr) + 1, index)
     try:
-        assert my_queue.arr[0].command == "ten_cmd"
+        assert my_queue._arr[0].command == "ten_cmd"
     except AssertionError:
         print("[FAIL] test_heapify failed")
         return
     print("[PASS] test_heapify has passed")
 
 
-def test_remove():
-    my_queue = ILMPrioQueue()
-    my_queue.insert({"priority": 10, "command": "first_cmd"})
-    my_queue.insert({"priority": 7, "command": "second_cmd"})
-    my_queue.insert({"priority": 1, "command": "third_cmd"})
-    my_queue.remove("first_cmd")
-    try:
-        assert len(my_queue.arr) == 2
-    except AssertionError:
-        print("[FAIL] test_remove has failed")
-        return
-    print("[PASS] test_remove has passed")
-
-
 def test_get_index_in_arr():
-    my_queue = ILMPrioQueue()
+    my_queue = ILMPrioQueue(log_level="error")
     my_queue.insert({"priority": 10, "command": "first_cmd"})
     my_queue.insert({"priority": 7, "command": "second_cmd"})
     my_queue.insert({"priority": 1, "command": "third_cmd"})
@@ -111,12 +97,37 @@ def test_get_index_in_arr():
     print("[PASS] test_get_index_in_arr has passed")
 
 
+def test_remove():
+    my_queue = ILMPrioQueue(log_level="error")
+    my_queue.insert({"priority": 10, "command": "first_cmd"})
+    my_queue.insert({"priority": 7, "command": "second_cmd"})
+    my_queue.insert({"priority": 1, "command": "third_cmd"})
+    my_queue.remove("first_cmd")
+    try:
+        assert len(my_queue._arr) == 2
+    except AssertionError:
+        print("[FAIL] test_remove has failed")
+        return
+    print("[PASS] test_remove has passed")
+
+
+def test_pop():
+    my_queue = ILMPrioQueue(log_level="error")
+    my_queue.insert({"priority": 10, "command": "first_cmd"})
+    try:
+        assert my_queue.pop() == "first_cmd"
+    except AssertionError:
+        print("[FAIL] test_pop has failed")
+        return
+    print("[PASS] test_pop has passed")
+
+
 def test_add_dup():
-    my_queue = ILMPrioQueue()
+    my_queue = ILMPrioQueue(log_level="error")
     my_queue.insert({"priority": 10, "command": "first_cmd"})
     my_queue.insert({"priority": 10, "command": "first_cmd"})
     try:
-        assert my_queue.arr[0].orig_order == 0
+        assert my_queue._arr[0].orig_order == 0
     except AssertionError:
         print("[FAIL] test_add_dup has failed")
         return
@@ -124,11 +135,11 @@ def test_add_dup():
 
 
 def test_remove_nonexistant():
-    my_queue = ILMPrioQueue()
+    my_queue = ILMPrioQueue(log_level="error")
     my_queue.insert({"priority": 10, "command": "first_cmd"})
     my_queue.remove("made_up_cmd")
     try:
-        assert len(my_queue.arr) == 1
+        assert len(my_queue._arr) == 1
     except AssertionError:
         print("[FAIL] test_remove_nonexistant has failed")
         return
@@ -141,10 +152,11 @@ def main():
     test_insert()
     test_compare_child_node()
     test_heapify()
+    test_get_index_in_arr()
     test_remove()
+    test_pop()
     test_add_dup()
     test_remove_nonexistant()
-    test_get_index_in_arr()
 
 
 if __name__ == "__main__":
